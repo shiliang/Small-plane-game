@@ -40,9 +40,9 @@ public class ShootGame extends JPanel {
 	public static BufferedImage pause;
 	public static BufferedImage gameover;
 
-	private FlyingObject[] flyings = {}; // �л�����
-	private Bullet[] bullets = {}; // �ӵ�����
-	private Hero hero = new Hero(); // Ӣ�ۻ�
+	private FlyingObject[] flyings = {};
+	private Bullet[] bullets = {};
+	private Hero hero = new Hero();
 
 	static {
 		try {
@@ -63,23 +63,20 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	/** �� */
 	@Override
 	public void paint(Graphics g) {
-		g.drawImage(background, 0, 0, null); // ������ͼ
-		paintHero(g); // ��Ӣ�ۻ�
-		paintBullets(g); // ���ӵ�
-		paintFlyingObjects(g); // ��������
-		paintScore(g); // ������
-		paintState(g); // ����Ϸ״̬
+		g.drawImage(background, 0, 0, null);
+		paintHero(g);
+		paintBullets(g);
+		paintFlyingObjects(g);
+		paintScore(g);
+		paintState(g);
 	}
 
-	/** ��Ӣ�ۻ� */
 	public void paintHero(Graphics g) {
 		g.drawImage(hero.getImage(), hero.getX(), hero.getY(), null);
 	}
 
-	/** ���ӵ� */
 	public void paintBullets(Graphics g) {
 		for (int i = 0; i < bullets.length; i++) {
 			Bullet b = bullets[i];
@@ -88,7 +85,6 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	/** �������� */
 	public void paintFlyingObjects(Graphics g) {
 		for (int i = 0; i < flyings.length; i++) {
 			FlyingObject f = flyings[i];
@@ -96,19 +92,18 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	/** ������ */
 	public void paintScore(Graphics g) {
-		int x = 10; // x����
-		int y = 25; // y����
-		Font font = new Font(Font.SANS_SERIF, Font.BOLD, 22); // ����
+		int x = 10;
+		int y = 25;
+		Font font = new Font(Font.SANS_SERIF, Font.BOLD, 22);
 		g.setColor(new Color(0xFF0000));
-		g.setFont(font); // ��������
-		g.drawString("SCORE:" + score, x, y); // ������
-		y=y+20; // y������20
-		g.drawString("LIFE:" + hero.getLife(), x, y); // ����
+		g.setFont(font);
+		g.drawString("SCORE:" + score, x, y);
+		y=y+20;
+		g.drawString("LIFE:" + hero.getLife(), x, y);
 	}
 
-	/** ����Ϸ״̬ */
+	//状态转化？状态模式
 	public void paintState(Graphics g) {
 		switch (state) {
 		case START: // ����״̬
@@ -125,25 +120,23 @@ public class ShootGame extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Fly");
-		ShootGame game = new ShootGame(); // ������
-		frame.add(game); // �������ӵ�JFrame��
-		frame.setSize(WIDTH, HEIGHT); // ���ô�С
-		frame.setAlwaysOnTop(true); // ��������������
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ĭ�Ϲرղ���
-		frame.setIconImage(new ImageIcon("images/icon.jpg").getImage()); // ���ô����ͼ��
-		frame.setLocationRelativeTo(null); // ���ô����ʼλ��
-		frame.setVisible(true); // �������paint
+		ShootGame game = new ShootGame(); 
+		frame.add(game); 
+		frame.setSize(WIDTH, HEIGHT); 
+		frame.setAlwaysOnTop(true); 
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setIconImage(new ImageIcon("images/icon.jpg").getImage());
+		frame.setLocationRelativeTo(null); 
+		frame.setVisible(true); 
 
-		game.action(); // ����ִ��
+		game.action();
 	}
 
-	/** ����ִ�д��� */
 	public void action() {
-		// �������¼�
-		MouseAdapter l = new MouseAdapter() {
+		MouseAdapter l = new MouseAdapter() {  //监听鼠标的动作
 			@Override
-			public void mouseMoved(MouseEvent e) { // ����ƶ�
-				if (state == RUNNING) { // ����״̬���ƶ�Ӣ�ۻ�--�����λ��
+			public void mouseMoved(MouseEvent e) { 
+				if (state == RUNNING) {
 					int x = e.getX();
 					int y = e.getY();
 					hero.moveTo(x, y);

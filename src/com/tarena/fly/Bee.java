@@ -2,13 +2,15 @@ package com.tarena.fly;
 
 import java.util.Random;
 
-/** ÃÛ·ä */
+/**
+ * å°èœœèœ‚å°„å‡»å®ŒåŽå¯ä»¥åŠ ç”Ÿå‘½æ­¦å™¨å¯ä»¥å‡çº§
+  */
 public class Bee extends FlyingObject implements Award{
-	private int xSpeed = 1;   //x×ø±êÒÆ¶¯ËÙ¶È
-	private int ySpeed = 2;   //y×ø±êÒÆ¶¯ËÙ¶È
-	private int awardType;    //½±ÀøÀàÐÍ
+	private int xSpeed = 1;   //xï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
+	private int ySpeed = 2;   //yï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
+	private int awardType;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	
-	/** ³õÊ¼»¯Êý¾Ý */
+	/** ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	public Bee(){
 		this.image = ShootGame.bee;
 		width = image.getWidth();
@@ -16,21 +18,21 @@ public class Bee extends FlyingObject implements Award{
 		y = -height;
 		Random rand = new Random();
 		x = rand.nextInt(ShootGame.WIDTH - width);
-		awardType = rand.nextInt(2);   //³õÊ¼»¯Ê±¸ø½±Àø
+		awardType = rand.nextInt(2);   //ï¿½ï¿½Ê¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 	
-	/** »ñµÃ½±ÀøÀàÐÍ */
+	/** ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	public int getType(){
 		return awardType;
 	}
 
-	/** Ô½½ç´¦Àí */
+	/** Ô½ï¿½ç´¦ï¿½ï¿½ */
 	@Override
 	public boolean outOfBounds() {
 		return y>ShootGame.HEIGHT;
 	}
 
-	/** ÒÆ¶¯£¬¿ÉÐ±×Å·É */
+	/** ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½Å·ï¿½ */
 	@Override
 	public void step() {      
 		x += xSpeed;
