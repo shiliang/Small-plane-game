@@ -8,7 +8,6 @@ import java.util.Random;
 public class Airplane extends FlyingObject implements Enemy {
 	private int speed = 3;  //�ƶ�����
 	
-	/** ��ʼ������ */
 	public Airplane(){
 		this.image = ShootGame.airplane;
 		width = image.getWidth();
@@ -18,7 +17,6 @@ public class Airplane extends FlyingObject implements Enemy {
 		x = rand.nextInt(ShootGame.WIDTH - width);
 	}
 	
-	/** ��ȡ���� */
 	@Override
 	public int getScore() {  
 		return 5;
