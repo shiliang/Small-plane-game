@@ -94,7 +94,7 @@ public class Player implements Cloneable {
 		int yStep = 20;  
 		if(doubleFire>0){ 
 			Bullet[] bullets = new Bullet[2];
-			bullets[0] = new Bullet(x+xStep,y-yStep);  //y-yStep(�ӵ���ɻ���λ��)
+			bullets[0] = new Bullet(x+xStep,y-yStep);
 			bullets[1] = new Bullet(x+3*xStep,y-yStep);
 			return bullets;
 		}else{

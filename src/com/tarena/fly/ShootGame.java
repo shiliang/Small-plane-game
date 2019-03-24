@@ -3,6 +3,8 @@ package com.tarena.fly;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -20,6 +22,9 @@ import playersystem.PlayerBuilderHero;
 import playersystem.Player;
 import playersystem.PlayerBuilder;
 import playersystem.PlayerCreatorDirector;
+import skillsystem.Command;
+import skillsystem.ShortcutKey;
+import skillsystem.ShotCommand;
 
 
 public class ShootGame extends JPanel {
@@ -49,8 +54,17 @@ public class ShootGame extends JPanel {
 	private FlyingObject[] flyings = {};
 	private Bullet[] bullets = {};
 	private Player hero;
-	
-	
+	private ShortcutKey sk = new ShortcutKey();
+	private int presskey;
+
+
+	public Bullet[] getBullets() {
+		return bullets;
+	}
+
+	public void setBullets(Bullet[] bullets) {
+		this.bullets = bullets;
+	}
 
 	public Player getHero() {
 		return hero;
@@ -143,6 +157,9 @@ public class ShootGame extends JPanel {
 		JFrame frame = new JFrame("Fly");
 		ShootGame game = new ShootGame();
 		game.setHero();
+		Command shotCommand = new ShotCommand(game.getHero(),game.getBullets());
+		MyKeyListener mk = new MyKeyListener();
+		mk.addCommand("w", shotCommand);
 		frame.add(game); 
 		frame.setSize(WIDTH, HEIGHT); 
 		frame.setAlwaysOnTop(true); 
@@ -150,7 +167,7 @@ public class ShootGame extends JPanel {
 		frame.setIconImage(new ImageIcon("images/icon.jpg").getImage());
 		frame.setLocationRelativeTo(null); 
 		frame.setVisible(true); 
-
+		frame.addKeyListener(mk);
 		game.action();
 	}
 
@@ -166,15 +183,15 @@ public class ShootGame extends JPanel {
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) { // ������
-				if (state == PAUSE) { // ��ͣ״̬������
+			public void mouseEntered(MouseEvent e) {
+				if (state == PAUSE) {
 					state = RUNNING;
 				}
 			}
 
 			@Override
-			public void mouseExited(MouseEvent e) { // ����˳�
-				if (state == RUNNING) { // ��Ϸδ��������������Ϊ��ͣ
+			public void mouseExited(MouseEvent e) {
+				if (state == RUNNING) { 
 					state = PAUSE;
 				}
 			}
@@ -183,64 +200,64 @@ public class ShootGame extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				switch (state) {
 				case START:
-					state = RUNNING; // ����״̬������
+					state = RUNNING; 
 					break;
-				case GAME_OVER: // ��Ϸ�����������ֳ�
-					flyings = new FlyingObject[0]; // ��շ�����
-					bullets = new Bullet[0]; // ����ӵ�
+				case GAME_OVER: 
+					flyings = new FlyingObject[0];
+					bullets = new Bullet[0];
 					//hero = new PlayerBuilderHero();
 					score = 0;
-					state = START; // ״̬����Ϊ����
+					state = START;
 					break;
 				}
 			}
 		};
-		this.addMouseListener(l); // �������������
-		this.addMouseMotionListener(l); // ������껬������
-
-		timer = new Timer(); // �����̿���
+		
+		this.addMouseListener(l);
+		this.addMouseMotionListener(l);
+		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (state == RUNNING) { // ����״̬
-					enterAction(); // �������볡
-					stepAction(); // ��һ��
-					shootAction(); // Ӣ�ۻ����
-					bangAction(); // �ӵ��������
-					outOfBoundsAction(); // ɾ��Խ������Ｐ�ӵ�
-					checkGameOverAction(); // �����Ϸ����
+				if (state == RUNNING) {
+					enterAction();
+					stepAction(); 
+					shootAction();
+					
+					bangAction();
+					outOfBoundsAction();
+					checkGameOverAction();
 				}
-				repaint(); // �ػ棬����paint()����
+				repaint();
 			}
 
 		}, intervel, intervel);
 	}
 
-	int flyEnteredIndex = 0; // �������볡����
+	int flyEnteredIndex = 0;
 
 	public void enterAction() {
 		flyEnteredIndex++;
-		if (flyEnteredIndex % 40 == 0) { // 400��������һ��������--10*40
-			FlyingObject obj = nextOne(); // �������һ��������
+		if (flyEnteredIndex % 40 == 0) { // 400
+			FlyingObject obj = nextOne(); 
 			flyings = Arrays.copyOf(flyings, flyings.length + 1);
 			flyings[flyings.length - 1] = obj;
 		}
 	}
 
 	public void stepAction() {
-		for (int i = 0; i < flyings.length; i++) { // ��������һ��
+		for (int i = 0; i < flyings.length; i++) {
 			FlyingObject f = flyings[i];
 			f.step();
 		}
 
-		for (int i = 0; i < bullets.length; i++) { // �ӵ���һ��
+		for (int i = 0; i < bullets.length; i++) {
 			Bullet b = bullets[i];
 			b.step();
 		}
 		hero.step();
 	}
 
-	/** ��������һ�� */
 	public void flyingStepAction() {
 		for (int i = 0; i < flyings.length; i++) {
 			FlyingObject f = flyings[i];
@@ -248,21 +265,20 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	int shootIndex = 0; // �������
+	int shootIndex = 0;
 
-	/** ��� */
 	public void shootAction() {
 		shootIndex++;
-		if (shootIndex % 30 == 0) { // 300���뷢һ��
-			Bullet[] bs = hero.shoot(); // Ӣ�۴���ӵ�
-			bullets = Arrays.copyOf(bullets, bullets.length + bs.length); // ����
+		if (shootIndex % 30 == 0) { 
+			Bullet[] bs = hero.shoot(); 
+			bullets = Arrays.copyOf(bullets, bullets.length + bs.length); 
 			System.arraycopy(bs, 0, bullets, bullets.length - bs.length,
-					bs.length); // ׷������
+					bs.length);
 		}
 	}
 
 	public void bangAction() {
-		for (int i = 0; i < bullets.length; i++) { // ���������ӵ�
+		for (int i = 0; i < bullets.length; i++) {
 			Bullet b = bullets[i];
 			bang(b); 
 		}
@@ -297,23 +313,22 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	/** �����Ϸ�Ƿ���� */
 	public boolean isGameOver() {
 		
 		for (int i = 0; i < flyings.length; i++) {
 			int index = -1;
 			FlyingObject obj = flyings[i];
 			if (hero.hit(obj)) { //击中目标
-				hero.subtractLife(); // ����
+				hero.subtractLife();
 				hero.setDoubleFire(0);
-				index = i; // ��¼���ϵķ���������
+				index = i;
 			}
 			if (index != -1) {
 				FlyingObject t = flyings[index];
 				flyings[index] = flyings[flyings.length - 1];
-				flyings[flyings.length - 1] = t; // ���ϵ������һ�������ｻ��
+				flyings[flyings.length - 1] = t;
 
-				flyings = Arrays.copyOf(flyings, flyings.length - 1); // ɾ�����ϵķ�����
+				flyings = Arrays.copyOf(flyings, flyings.length - 1);
 			}
 		}
 		
@@ -338,12 +353,12 @@ public class ShootGame extends JPanel {
 
 			flyings = Arrays.copyOf(flyings, flyings.length - 1);
 
-			if (one instanceof Enemy) { // ������ͣ��ǵ��ˣ���ӷ�
-				Enemy e = (Enemy) one; // ǿ������ת��
-				score += e.getScore(); // �ӷ�
-			} else { // ��Ϊ���������ý���
+			if (one instanceof Enemy) {
+				Enemy e = (Enemy) one; 
+				score += e.getScore(); 
+			} else {
 				Award a = (Award) one;
-				int type = a.getType(); // ��ȡ��������
+				int type = a.getType();
 				switch (type) {
 				case Award.DOUBLE_FIRE:
 					hero.addDoubleFire();
@@ -356,11 +371,7 @@ public class ShootGame extends JPanel {
 		}
 	}
 
-	/**
-	 * ������ɷ�����
-	 * 
-	 * @return ���������
-	 */
+
 	public static FlyingObject nextOne() {
 		Random random = new Random();
 		int type = random.nextInt(20); // [0,20)
