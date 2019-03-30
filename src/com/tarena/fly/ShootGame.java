@@ -141,13 +141,13 @@ public class ShootGame extends JPanel {
 	//状态转化？状态模式
 	public void paintState(Graphics g) {
 		switch (state) {
-		case START: // ����״̬
+		case START:
 			g.drawImage(start, 0, 0, null);
 			break;
-		case PAUSE: // ��ͣ״̬
+		case PAUSE:
 			g.drawImage(pause, 0, 0, null);
 			break;
-		case GAME_OVER: // ��Ϸ��ֹ״̬
+		case GAME_OVER:
 			g.drawImage(gameover, 0, 0, null);
 			break;
 		}
